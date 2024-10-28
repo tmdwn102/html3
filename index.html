@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title> 김승주 1022 과제</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/p5.js"></script>
+    <style>
+        html, body {
+            margin: 0px;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let clickVal = "circle";
+
+        class Dial{
+        constructor(x, y, size){
+            this.x = x;
+            this.y = y;
+            this.size = size;
+        }
+        moveDial(){
+            push();
+            translate(this.x, this.y);
+
+            let distance = dist(mouseX, mouseY, this.x, this.y);
+            let maxDistance = dist(0,0,width, height);
+            
+            let brightness = map(distance, 0, maxDistance, 255, 50);
+            let redValue = map(mouseX, 0, width, 255, 0);
+            let greenValue = map(mouseX, 0, height, 0, 255);
+            let blueValue = map(mouseX+mouseY, 0, width+height, 0, 255);
+
+            fill(redValue, greenValue, blueValue, brightness);
+            noStroke();
+            
+            let angle = atan2(mouseY-this.y, mouseX-this.x);
+            rotate(angle);
+            if (clickVal === "rect") {
+                rect(0, 0, this.size, this.size/5);
+            } else {
+                ellipse(0, 0, this.size/5, this.size);
+                }
+            pop();
+        }
+        }
+
+        let dials = [];
+        let cols; let rows;
+        let size = 40;
+
+        function setup() {
+        createCanvas(1000, 1000); //
+        cols = width/size;
+        rows = height/size;
+        for (let i=0; i<cols; i++){
+            dials[i] = [];
+            for (let j=0; j<rows; j++){
+            dials[i][j] = new Dial(size/2 + i*size, size/2 + j*size, size);
+            
+            }
+        }
+        rectMode(CENTER);
+        angleMode(DEGREES);
+        }
+
+        function draw() {
+        background(0);
+        for (let i=0; i<cols; i++){
+            for (let j=0; j<rows; j++){
+            dials[i][j].moveDial();
+            }
+        }
+        }
+        function mousePressed() {
+            if (clickVal=="circle") {
+                clickVal = "rect";
+            } else {
+                clickVal = "circle";
+            }
+        }
+    </script>
+</body>
+</html>
